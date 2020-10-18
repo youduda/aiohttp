@@ -135,4 +135,12 @@ install:
 
 install-dev: .develop
 
+.PHONY: build-llhttp
+
+# 1. Upgrage submodule to point on the new release first
+# 2. Install npm, e.g. sudo apt install npm
+build-llhttp:
+	cd vendor/llhttp && npm install
+	cd vendor/llhttp && npm run build
+
 .PHONY: all build flake test vtest cov clean doc mypy
