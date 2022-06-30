@@ -3,6 +3,7 @@ import logging
 import socket
 import sys
 from argparse import ArgumentParser
+from asyncio import Task
 from collections.abc import Iterable
 from importlib import import_module
 from typing import (
@@ -478,10 +479,11 @@ def run_app(
     reuse_address: Optional[bool] = None,
     reuse_port: Optional[bool] = None,
     loop: Optional[asyncio.AbstractEventLoop] = None,
-) -> None:
+    run_async: bool = False
+) -> Optional[Task[None]]:
     """Run an app locally"""
     if loop is None:
-        loop = asyncio.new_event_loop()
+        loop = asyncio.get_event_loop()
     loop.set_debug(debug)
 
     # Configure if and only if in debugging mode and using the default logger
@@ -511,6 +513,9 @@ def run_app(
             reuse_port=reuse_port,
         )
     )
+
+    if run_async:
+        return main_task
 
     try:
         asyncio.set_event_loop(loop)
